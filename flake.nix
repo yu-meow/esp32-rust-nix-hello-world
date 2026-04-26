@@ -1,0 +1,78 @@
+{
+  inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+    naersk.url = "github:nix-community/naersk";
+
+    nixpkgs-mozilla = {
+      url = "github:mozilla/nixpkgs-mozilla";
+      flake = false;
+    };
+
+    fenix.url = "github:nix-community/fenix";
+    fenix.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs =
+    {
+      self,
+      flake-utils,
+      naersk,
+      nixpkgs,
+      nixpkgs-mozilla,
+      fenix,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = (import nixpkgs) {
+          inherit system;
+
+          overlays = [
+            (import nixpkgs-mozilla)
+          ];
+        };
+
+        toolchain =
+          with fenix.packages.${system};
+          fromToolchainFile {
+            file = ./rust-toolchain.toml;
+            sha256 = "sha256-gh/xTkxKHL4eiRXzWv8KP7vfjSk61Iq48x47BEDFgfk=";
+          };
+
+        naersk' = pkgs.callPackage naersk {
+          cargo = toolchain;
+          rustc = toolchain;
+        };
+
+      in
+      rec {
+        # For `nix build`:
+        defaultPackage = naersk'.buildPackage {
+          src = ./.;
+          release = true;
+          buildInputs = [ pkgs.espflash ];
+          postInstall = "espflash flash --monitor --chip esp32c6 $out/bin/esp32c6-hello-world";
+        };
+
+        # For `nix build .#flash`
+        packages.flash = naersk'.buildPackage {
+          src = ./.;
+          release = true;
+          buildInputs = [ pkgs.espflash ];
+          postInstall = "espflash flash --chip esp32c6 $out/bin/esp32c6-hello-world";
+        };
+
+        # For `nix build .#build`
+        packages.build = naersk'.buildPackage {
+          src = ./.;
+          release = true;
+        };
+
+        # For `nix develop`:
+        devShell = pkgs.mkShell {
+          buildInputs = [ pkgs.espflash ];
+          nativeBuildInputs = [ toolchain ];
+        };
+      }
+    );
+}
