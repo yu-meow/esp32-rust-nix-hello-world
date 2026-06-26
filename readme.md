@@ -3,7 +3,7 @@ Compile target is for riscv32 based ESP-32, can be adjusted for xtensa based ESP
 
 ## Preparation
 You likely need to adjust `sha256 = "..."` first or when updating the lock file.
-To do this, run one of the commands below. Nix will give u a hash mismatch error, showing the actual hash of the rust compiler. Copy this to the ``flake.nix` file
+To do this, run one of the commands below. Nix will give u a hash mismatch error, showing the actual hash of the rust compiler. Copy this to the `flake.nix` file
 
 ## Build and flash
 Flashing using nix currently does not seem to work.
