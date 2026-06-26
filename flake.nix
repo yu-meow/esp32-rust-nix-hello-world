@@ -36,7 +36,7 @@
           with fenix.packages.${system};
           fromToolchainFile {
             file = ./rust-toolchain.toml;
-            sha256 = "sha256-gh/xTkxKHL4eiRXzWv8KP7vfjSk61Iq48x47BEDFgfk=";
+            sha256 = "sha256-mvUGEOHYJpn3ikC5hckneuGixaC+yGrkMM/liDIDgoU=";
           };
 
         naersk' = pkgs.callPackage naersk {
@@ -51,7 +51,7 @@
           src = ./.;
           release = true;
           buildInputs = [ pkgs.espflash ];
-          postInstall = "espflash flash --monitor --chip esp32c6 $out/bin/esp32c6-hello-world";
+          postInstall = "espflash flash --monitor --chip esp32c6 --port /dev/ttyACM0 $out/bin/esp32c6-hello-world";
         };
 
         # For `nix build .#flash`
@@ -59,7 +59,7 @@
           src = ./.;
           release = true;
           buildInputs = [ pkgs.espflash ];
-          postInstall = "espflash flash --chip esp32c6 $out/bin/esp32c6-hello-world";
+          postInstall = "espflash flash --chip esp32c6 --port /dev/ttyACM0 $out/bin/esp32c6-hello-world";
         };
 
         # For `nix build .#build`
