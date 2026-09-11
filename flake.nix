@@ -50,8 +50,6 @@
         defaultPackage = naersk'.buildPackage {
           src = ./.;
           release = true;
-          buildInputs = [ pkgs.espflash ];
-          postInstall = "espflash flash --monitor --chip esp32c6 --port /dev/ttyACM0 $out/bin/result";
         };
 
         # For `nix build .#flash`
@@ -59,13 +57,15 @@
           src = ./.;
           release = true;
           buildInputs = [ pkgs.espflash ];
-          postInstall = "espflash flash --chip esp32c6 --port /dev/ttyACM0 $out/bin/result";
+          postInstall = "espflash flash --chip esp32c6 $out/bin/result";
         };
 
-        # For `nix build .#build`
-        packages.build = naersk'.buildPackage {
+        # For `nix build .#build-flash`
+        packages.build-flash = naersk'.buildPackage {
           src = ./.;
           release = true;
+          buildInputs = [ pkgs.espflash ];
+          postInstall = "espflash flash --monitor --chip esp32c6 $out/bin/result";
         };
 
         # For `nix develop`:
