@@ -45,7 +45,7 @@
         };
 
       in
-      rec {
+      {
         # For `nix build`:
         defaultPackage = naersk'.buildPackage {
           src = ./.;

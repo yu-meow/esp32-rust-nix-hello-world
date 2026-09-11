@@ -13,19 +13,14 @@ Running espflash in Nix gives this error:
 ```
 If you know a solution, please let me know.
 
-Use this instead:
+Use this instead (needs espflash installed manually on the host system):
 ```
-nix build .#build
+nix build
 espflash flash --monitor --chip esp32c6 result
 ```
-(Needs espflash installed manually on the host system)
 
-## Build only
-```
-nix build .#build
-```
-
-## Dev shell
-```
-nix develop
-```
+## All options
+- Build only: `nix build`
+- Flash only: `nix build .#flash`
+- Build and flash: `nix build .#build-flash`
+- Dev shell: `nix develop`
