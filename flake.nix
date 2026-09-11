@@ -51,7 +51,7 @@
           src = ./.;
           release = true;
           buildInputs = [ pkgs.espflash ];
-          postInstall = "espflash flash --monitor --chip esp32c6 --port /dev/ttyACM0 $out/bin/esp32c6-hello-world";
+          postInstall = "espflash flash --monitor --chip esp32c6 --port /dev/ttyACM0 $out/bin/result";
         };
 
         # For `nix build .#flash`
@@ -59,7 +59,7 @@
           src = ./.;
           release = true;
           buildInputs = [ pkgs.espflash ];
-          postInstall = "espflash flash --chip esp32c6 --port /dev/ttyACM0 $out/bin/esp32c6-hello-world";
+          postInstall = "espflash flash --chip esp32c6 --port /dev/ttyACM0 $out/bin/result";
         };
 
         # For `nix build .#build`
